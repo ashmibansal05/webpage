@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Form - Service Sphere</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <h1>Book a Service</h1>
+    <form id="booking-form">
+        <select id="service-type" required>
+            <option value="electrician">Electrician</option>
+            <option value="plumber">Plumber</option>
+            <option value="carpenter">Carpenter</option>
+        </select>
+        <input type="datetime-local" id="date-time" required>
+        <input type="text" id="address" placeholder="Address" required>
+        <button type="submit">Book Now</button>
+    </form>
+    <div id="provider-list"></div>
+    <script src="js/booking_script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Service Sphere</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js"></script>
+</head>
+
+<body>
+    <header>
+        <h1>Service Sphere Dashboard</h1>
+        <nav>
+            <a href="booking_form.html">Book a Service</a>
+            <a href="profile.html">Profile</a>
+            <button id="logout">Logout</button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="service-selection">
+            <h2>Select a Service</h2>
+            <div class="service-card" id="electrician-card">
+                <img src="images/electrician.jpg" alt="Electrician">
+                <h3>Electrician</h3>
+                <p>Professional electrical services for your home or office.</p>
+                <button onclick="location.href='booking_form.html?service=electrician'">Book Now</button>
+            </div>
+            <div class="service-card" id="plumber-card">
+                <img src="images/plumber.jpg" alt="Plumber">
+                <h3>Plumber</h3>
+                <p>Expert plumbing services to solve your water issues.</p>
+                <button onclick="location.href='booking_form.html?service=plumber'">Book Now</button>
+            </div>
+            <div class="service-card" id="carpenter-card">
+                <img src="images/carpenter.jpg" alt="Carpenter">
+                <h3>Carpenter</h3>
+                <p>Skilled carpentry for all your furniture and fixtures.</p>
+                <button onclick="location.href='booking_form.html?service=carpenter'">Book Now</button>
+            </div>
+        </section>
+
+        <section id="recent-bookings">
+            <h2>Your Recent Bookings</h2>
+            <div id="bookings-list"></div>
+        </section>
+    </main>
+
+    <script src="js/script.js"></script>
+    <script>
+        // Fetch recent bookings
+        const userId = firebase.auth().currentUser.uid;
+        fetchRecentBookings(userId);
+
+        function fetchRecentBookings(userId) {
+            firebase.database().ref('bookings/' + userId).once('value')
+                .then(snapshot => {
+                    const bookings = snapshot.val();
+                    const bookingsList = document.getElementById("bookings-list");
+                    bookingsList.innerHTML = ""; // Clear previous bookings
+
+                    if (bookings) {
+                        Object.keys(bookings).forEach(key => {
+                            const booking = bookings[key];
+                            bookingsList.innerHTML += `
+                                <div class="booking-item">
+                                    <h4>${booking.service}</h4>
+                                    <p>Date & Time: ${booking.dateTime}</p>
+                                    <p>Address: ${booking.address}</p>
+                                </div>`;
+                        });
+                    } else {
+                        bookingsList.innerHTML = "<p>No recent bookings found.</p>";
+                    }
+                })
+                .catch(error => console.error("Error fetching bookings:", error));
+        }
+    </script>
+</body>
+
+</html>
